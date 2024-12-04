@@ -1,0 +1,129 @@
+:root {
+  /* fonts */
+  --ff-primary: 'Josefin Sans', serif;
+  /* colors */
+  --white: #fff;
+  --soft-white: #f2f2f2;
+  --green: hsl(90, 20%, 46%);
+  --pale-yellow: hsl(50, 46%, 71%);
+  --very-dark-brown: hsl(38, 86%, 6%);
+  --deep-red: hsl(7, 79%, 30%);
+}
+
+/* Reset 
+   Josh Comeau custom css reset
+   https://www.joshwcomeau.com/css/custom-css-reset/ 
+*/
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+#root,
+#__next {
+  isolation: isolate;
+}
+
+/* Base Styles */
+body {
+  padding-inline: 1rem;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--ff-primary);
+  background: var(--green);
+  color: var(--very-dark-brown);
+}
+
+header {
+  padding-block: 1.5rem;
+  text-align: center;
+}
+
+.container {
+  margin: 0 auto;
+  max-width: 800px;
+  text-align: center;
+}
+
+h1 {
+  font-size: 3.5rem;
+}
+
+h2 {
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+}
+
+.calendar-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(125px, 100%), 1fr));
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: var(--soft-white);
+  background: var(--pale-yellow);
+  border-radius: 5px;
+  list-style: none;
+}
+
+.calendar-box {
+  padding: 0.5rem;
+  background: var(--deep-red);
+  color: var(--soft-white);
+  border-radius: 5px;
+}
+
+.calendar-box__number {
+  margin-bottom: 1rem;
+  font-size: 1.75rem;
+  font-weight: 600;
+}
+
+.calendar-box__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  font-size: 1.125rem;
+  color: var(--pale-yellow);
+}
