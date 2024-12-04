@@ -11,8 +11,6 @@ Your task is to build an app that meets these criteria:
 
 - The player will input their guess.
 
-
-
 - When all films in the array have been used, the player should see a message saying "That's all folks!".
 
 - Each film should only be used once. There should be no repetition. 
@@ -24,51 +22,50 @@ Stretch Goals
 
 - Improve the UX by disabling the form/button when the game is over and during the pause between questions.
 */
-
 import { films } from './data.js'
-
 // Some useful elements
 const guessForm = document.getElementById('guess-form');
 const guessInput = document.getElementById('guess-input')
-const messageContainer = document.getElementsByClassName('message-container')[0]
-// const emojiCluesContainer = document.getElementsByClassName('emoji-clues-container')[0]
 const emojiCluesContainer = document.getElementById('emoji-clues-container')
-
+const messageContainer = document.getElementById('message-container');
 // current game data
 const gameFilmsData = [...films]; // copy films array to work with during game
-let playerGuess = '';
 let currentFilm;
-let availableGuessCount = 3;
+let availableGuesses = 3;
 
-console.log(gameFilmsData)
+// console.log(gameFilmsData)
 
 // get random film object from gameFilmsData
 function getRandomFilm(filmsArray) {
-  console.log(filmsArray)
-  // random index
-  const randomIndex = Math.floor(Math.random() * filmsArray.length);
-  const randomFilm = filmsArray.splice(randomIndex, 1);
-  let currentFilm = randomFilm[0];
-  console.log(currentFilm)
-  renderEmojiClues(currentFilm.emoji)
+  messageContainer.textContent = ''; // clear any messages
+
+  if (filmsArray.length === 0) {
+    messageContainer.textContent = "That's all folks!"
+    console.log('Game over')
+    // disable button?
+  } else {
+      console.log(filmsArray)
+      const randomIndex = Math.floor(Math.random() * filmsArray.length);
+      const randomFilm = filmsArray.splice(randomIndex, 1);
+      currentFilm = randomFilm[0]; // set currentFilm 
+      renderEmojiClues(currentFilm)
+  }
 }
 
 // *** On page load *** //
 // - call getRandomFilm(gameFilmsData)
-
+getRandomFilm(gameFilmsData)
+console.log(currentFilm)
 
 // accept an array of emojis and add to DOM
-function renderEmojiClues(emojiArray) {
-  // clear previous emojis from DOM
-  emojiCluesContainer.textContent = '';
-  // clear previous aria-label attribute
-  emojiCluesContainer.setAttribute('aria-label', '');
+function renderEmojiClues({ariaLabel, emoji}) { // destructure film in place
   // set aria-label attribute of emojiCluesContainer
   // render new set of emojis to DOM
-  emojiCluesContainer.textContent = emojiArray.join(' ');
+  emojiCluesContainer.setAttribute('aria-label', ariaLabel)
+  emojiCluesContainer.textContent = emoji.join(' ');
 }
 
-getRandomFilm(gameFilmsData)
+
 
 /*
 - available guess count should reset to 3 for each new film
@@ -82,13 +79,41 @@ getRandomFilm(gameFilmsData)
 
 // score user guess
 function scoreSubmittedGuess(userGuess, filmTitle) {
+  console.log('Current film title: ', filmTitle)
+  console.log('User guess: ', userGuess)
+
+  // if user guesses correctly:
+  if (userGuess.toLowerCase().trim() === filmTitle.toLowerCase()) {
+    availableGuesses = 3;
+    messageContainer.textContent = `Correct! The movie was ${filmTitle}`
+    // wait 3 seconds and get a new emoji clue
+    setTimeout(() => {
+      getRandomFilm(gameFilmsData);
+    }, 3000)
+  // if user guess is incorrect:
+  } else {
+    availableGuesses -= 1;
+    console.log(`Incorrect. Guesses remaining: ${availableGuesses}.`)
+    messageContainer.textContent = `Wrong. Guesses remaining: ${availableGuesses}`
+  }
 
 }
 
 function handleGuessSubmit(e) {
   e.preventDefault();
-  console.log('guess submitted')
+  const userGuess = guessInput.value;
+  scoreSubmittedGuess(userGuess, currentFilm.title)
   guessInput.value = '';
+
+  if (availableGuesses === 0) {
+    console.log('Sorry... rendering new emojis.')
+    messageContainer.textContent = `Sorry, the film movie was ${currentFilm.title}`
+    // wait 3 seconds and get a new emoji clue
+    setTimeout(() => {
+      getRandomFilm(gameFilmsData);
+      messageContainer.textContent = '';
+    }, 3000)
+  }
 
 }
 
